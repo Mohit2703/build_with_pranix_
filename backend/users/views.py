@@ -40,6 +40,7 @@ class LoginView(APIView):
         data.is_valid(raise_exception=True)
         email = data.validated_data["email"]
         password = data.validated_data["password"]
+        print("email:", email, "password:", password)
         user = authenticate(request, email=email, password=password)
         print("user:", user)
         if not user:
