@@ -1,6 +1,6 @@
 # users/urls.py
 from django.urls import path
-from .views import CreateProjectTypesView, RemoveProjectTypesView, GetProjectTypesView, ProjectView, RemoveProjectView, GetOneProjectView, QuestionView, RemoveQuestionView, AnswerView, RemoveAnswerView
+from .views import CreateProjectTypesView, RemoveProjectTypesView, GetProjectTypesView, ProjectView, RemoveProjectView, GetOneProjectView, QuestionView, RemoveQuestionView, AnswerView, RemoveAnswerView, AnswerQuestionView, GetNextQuestionView
 
 urlpatterns = [
     path("create_project_type/", CreateProjectTypesView.as_view(), name="create project type"),
@@ -17,4 +17,6 @@ urlpatterns = [
     path("answer/<int:project_id>/", AnswerView.as_view()),
     path("answer/<int:question_id>/<int:project_id>/", AnswerView.as_view()),
     path("remove_answer/<int:answer_id>/", RemoveAnswerView.as_view()),
+    path("answer_question/", AnswerQuestionView.as_view()),
+    path("get_next_question/<int:project_id>/", GetNextQuestionView.as_view())
 ]

@@ -6,9 +6,10 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
-from .models import ProjectType, Project, Question, Answer
-from .serializers import QuestionSerializer, AnswerSerializer, ProjectTypeSerializer, ProjectSerializer
+from .models import ProjectType, Project, Question, Answer, AI_Question, AI_Answer
+from .serializers import QuestionSerializer, AnswerSerializer, ProjectTypeSerializer, ProjectSerializer, AI_QuestionSerializer, AI_AnswerSerializer
 from django.db.models import Q
+from .anthropic.prompt import anthropic_prompt
 
 
 # Create your views here.
@@ -342,4 +343,170 @@ class RemoveAnswerView(APIView):
         }, status = status.HTTP_200_OK)
 
 
-    
+class GetNextQuestionView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def get(self, request, project_id):
+        user = request.user
+
+        project = Project.objects.get(id = project_id)
+
+        if not project:
+            return Response({"detail": "Project is not present"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if user.role != "admin" or user != project.user:
+            return Response({"detail": "User is not authorized to view questions for this project."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        answered_question_ids = Answer.objects.filter(project=project).values_list('question_id', flat=True)
+        
+        next_question = Question.objects.filter(
+            project_type=project.project_type,
+            enabled=True
+        ).exclude(id__in=answered_question_ids).order_by("question_no").first()
+
+        if next_question:
+            serializer = QuestionSerializer(next_question)
+            return Response({
+                "detail": "Next question retrieved successfully",
+                "data": {
+                    **serializer.data,
+                    "question_type": "predefined"
+                }
+            }, status=status.HTTP_200_OK)
+        
+        ai_answered_question_ids = AI_Question.objects.filter(project=project).values_list('id', flat=True)
+        next_ai_question = AI_Question.objects.filter(
+            project=project
+        ).exclude(id__in=ai_answered_question_ids).order_by("question_no").first()
+
+        if next_ai_question:
+            serializer = AI_QuestionSerializer(next_ai_question)
+            return Response({
+                "detail": "Next AI question retrieved successfully",
+                "data": {
+                    **serializer.data,
+                    "question_type": "ai"
+                }
+            }, status=status.HTTP_200_OK)
+        
+        if ai_answered_question_ids.count() != 0:
+            return Response({"detail": "All questions have been answered."}, status=status.HTTP_200_OK)
+        
+        # Generate new question using Anthropic model
+        all_questions = []
+        answers = Answer.objects.filter(project=project)
+        for answer in answers:
+            all_questions.append({
+                "id": answer.question.id,
+                "question_text": answer.question.text,
+                "answer_text": answer.text,
+                "question_asked_by": "predefined"  # Assuming all these questions were asked by the user
+            })
+
+        ai_questions = anthropic_prompt.ask_questions(all_questions)
+
+        if not ai_questions:
+            return Response({"detail": "All questions have been answered."}, status=status.HTTP_200_OK)
+        
+        ques_no = 1
+        for ai_question_text in ai_questions:
+            ai_question = AI_Question.objects.create(
+                project=project,
+                text=ai_question_text,
+                question_no = ques_no
+            )
+            ques_no += 1
+        
+        ai_ques = AI_Question.objects.filter(project=project).order_by("question_no").first()
+        serializer = AI_QuestionSerializer(ai_ques)
+        return Response({
+            "detail": "Next AI question generated successfully",
+            "data": {
+            **serializer.data,
+            "question_type": "ai"
+        }}, status=status.HTTP_200_OK)
+
+
+class AnswerQuestionView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def post(self, request):
+        user = request.user
+
+        question_id, project_id, text, question_type = request.data.get("question_id"), request.data.get("project_id"), request.data.get("text"), request.data.get("question_type")
+        next_question = None
+        if question_type == "predefined":
+            question = Question.objects.get(id = question_id)
+            if question.next_question:
+                next_question = {
+                    **QuestionSerializer(question.next_question).data,
+                    "question_type": "predefined"
+                }
+            else:
+                all_questions = []
+                answers = Answer.objects.filter(project=project)
+                for answer in answers:
+                    all_questions.append({
+                        "id": answer.question.id,
+                        "question_text": answer.question.text,
+                        "answer_text": answer.text,
+                        "question_asked_by": "predefined"  # Assuming all these questions were asked by the user
+                    })
+                ai_questions = anthropic_prompt.ask_questions(all_questions)
+
+                if ai_questions:
+                    previous_ai_question = None
+                    ques_no = 0
+                    for ai_question_text in ai_questions:
+                        ai_question = AI_Question.objects.create(
+                            project=project,
+                            text=ai_question_text,
+                            question_no = ques_no
+                        )
+                        ques_no += 1
+                        if previous_ai_question:
+                            previous_ai_question.next_question = ai_question
+                            previous_ai_question.save()
+                        previous_ai_question = ai_question
+                    next_question = {
+                        **AI_QuestionSerializer(AI_Question.objects.filter(project__id=project_id).order_by("question_no").first()).data,
+                        "question_type": "ai"
+                    }
+        else:
+            question = AI_Question.objects.get(id = question_id)
+            if question.next_question:
+                next_question = {
+                    **AI_QuestionSerializer(question.next_question).data,
+                    "question_type": "ai"
+                }
+
+            if not question:
+                return Response({"detail": "Question is not present"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            project = Project.objects.get(id = project_id)
+
+            if not project:
+                return Response({"detail": "Project is not present"}, status=status.HTTP_400_BAD_REQUEST)
+
+            if question_type == "predefined":
+                answer = Answer.objects.create(
+                    user = user,
+                    question = question,
+                    project = project,
+                    text = text
+                )
+            else:
+                answer = AI_Answer.objects.create(
+                    user = user,
+                    ai_question = question,
+                    text = text
+                )
+
+            return Response({
+                "detail": "Answer Created successfully",
+                "data": AnswerSerializer(answer).data,
+                "next_question": next_question
+            }, status = status.HTTP_201_CREATED)
+

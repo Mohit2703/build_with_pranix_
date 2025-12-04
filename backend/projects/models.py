@@ -45,6 +45,8 @@ class Question(models.Model):
         ('mcq', 'mcq'),
         ('mic', 'mic')       
     ]
+    question_no = models.IntegerField()
+    next_question = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
     text = models.TextField()
     description = models.TextField(blank=True, default="")
     project_type = models.ForeignKey(ProjectType, on_delete=models.CASCADE)
@@ -52,6 +54,10 @@ class Question(models.Model):
     enabled = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('question_no', 'project_type')
+
 
 class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -62,11 +68,16 @@ class Answer(models.Model):
     updated_at = models.DateTimeField(auto_now=True)    
 
 class AI_Question(models.Model):
+    question_no = models.IntegerField()
+    next_question = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     text = models.TextField()
     description = models.TextField(blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('question_no', 'project')
 
 class AI_Answer(models.Model):
     ai_question = models.ForeignKey(AI_Question, on_delete=models.CASCADE)

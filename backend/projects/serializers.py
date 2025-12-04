@@ -14,7 +14,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ["id", "text", "description", "project_type", "question_type", "enabled", "created_at", "updated_at"]
+        fields = ["id", "text", "description", "project_type", "question_type", "enabled", "created_at", "updated_at", "next_question"]
 
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
