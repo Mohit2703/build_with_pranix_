@@ -102,20 +102,18 @@ export function AdminSidebar({ isCollapsed = false, onToggle }) {
     };
 
     return (
-        <aside className={`${isCollapsed ? 'w-16' : 'w-60'} flex-shrink-0 bg-admin-sidebar flex flex-col transition-all duration-300`}>
+        <aside className={`${isCollapsed ? 'w-16' : 'w-64'} flex-shrink-0 bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-300`}>
             {/* Logo */}
-            <div className="h-16 px-4 flex items-center border-b border-white/10">
-                <Link href="/admin" className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                        <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-                        </svg>
+            <div className="h-16 px-4 flex items-center border-b border-slate-800">
+                <Link href="/admin" className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full premium-gradient flex items-center justify-center shadow-lg shadow-indigo-500/20 flex-shrink-0">
+                        <div className="w-4 h-4 rounded-full border-[2px] border-white/30" />
                     </div>
                     {!isCollapsed && (
-                        <>
-                            <span className="text-white font-bold text-lg">ScopeSmith</span>
-                            <span className="px-1.5 py-0.5 text-xs bg-primary/30 text-primary-foreground rounded font-medium">Admin</span>
-                        </>
+                        <div className="flex flex-col">
+                            <span className="text-white font-bold text-lg leading-none">Nexora</span>
+                            <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Admin</span>
+                        </div>
                     )}
                 </Link>
             </div>
@@ -130,8 +128,8 @@ export function AdminSidebar({ isCollapsed = false, onToggle }) {
                                     <button
                                         onClick={() => toggleExpand(item.name)}
                                         className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${isActive(item.href, item.children)
-                                                ? 'bg-admin-sidebar-active text-admin-sidebar-text-active'
-                                                : 'text-admin-sidebar-text hover:bg-admin-sidebar-hover hover:text-white'
+                                            ? 'bg-admin-sidebar-active text-admin-sidebar-text-active'
+                                            : 'text-admin-sidebar-text hover:bg-admin-sidebar-hover hover:text-white'
                                             }`}
                                     >
                                         {item.icon}
@@ -157,8 +155,8 @@ export function AdminSidebar({ isCollapsed = false, onToggle }) {
                                                     <Link
                                                         href={child.href}
                                                         className={`block px-3 py-2 rounded-lg text-sm transition-colors ${isChildActive(child.href)
-                                                                ? 'bg-admin-sidebar-hover text-white font-medium'
-                                                                : 'text-admin-sidebar-text hover:bg-admin-sidebar-hover hover:text-white'
+                                                            ? 'bg-admin-sidebar-hover text-white font-medium'
+                                                            : 'text-admin-sidebar-text hover:bg-admin-sidebar-hover hover:text-white'
                                                             }`}
                                                     >
                                                         {child.name}
@@ -172,8 +170,8 @@ export function AdminSidebar({ isCollapsed = false, onToggle }) {
                                 <Link
                                     href={item.href}
                                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${isActive(item.href)
-                                            ? 'bg-admin-sidebar-active text-admin-sidebar-text-active'
-                                            : 'text-admin-sidebar-text hover:bg-admin-sidebar-hover hover:text-white'
+                                        ? 'bg-admin-sidebar-active text-admin-sidebar-text-active'
+                                        : 'text-admin-sidebar-text hover:bg-admin-sidebar-hover hover:text-white'
                                         }`}
                                 >
                                     {item.icon}

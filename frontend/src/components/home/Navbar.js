@@ -48,7 +48,7 @@ export default function Navbar() {
                     <div className="hidden md:flex items-center gap-4">
                         <ThemeToggle />
                         <Link
-                            href="/quote"
+                            href="/dashboard"
                             className="bg-gradient-to-r from-[var(--brand-blue)] to-[var(--brand-purple)] text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg hover:shadow-indigo-500/25 hover:-translate-y-0.5 active:translate-y-0"
                         >
                             Get Quote

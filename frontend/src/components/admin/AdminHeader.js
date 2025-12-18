@@ -9,7 +9,7 @@ export function AdminHeader({ onMenuToggle }) {
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
     return (
-        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
+        <header className="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 sticky top-0 z-40">
             {/* Left: Menu Toggle + Search */}
             <div className="flex items-center gap-4">
                 <button

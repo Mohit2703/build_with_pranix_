@@ -28,7 +28,7 @@ export default function Hero() {
 
                 <div className="flex justify-center items-center">
                     <Link
-                        href="/ai-requirements"
+                        href="/dashboard"
                         className="inline-flex items-center justify-center px-10 py-5 text-lg font-bold text-white transition-all duration-300 bg-gradient-to-r from-[var(--brand-blue)] via-[var(--brand-purple)] to-[var(--brand-teal)] rounded-2xl hover:shadow-2xl hover:shadow-indigo-500/40 transform hover:-translate-y-1 active:translate-y-0"
                     >
                         <span className="mr-2">✨</span>

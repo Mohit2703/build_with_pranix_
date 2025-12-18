@@ -24,7 +24,7 @@ export default function CTABanner() {
 
                         <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
                             <Link
-                                href="/quote"
+                                href="/dashboard"
                                 className="inline-flex items-center justify-center px-10 py-5 text-lg font-bold text-slate-900 transition-all duration-300 bg-white rounded-2xl hover:bg-slate-50 hover:shadow-2xl transform hover:-translate-y-1 active:translate-y-0"
                             >
                                 Get Your Free Quote
