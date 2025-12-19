@@ -19,7 +19,7 @@ export default function SettingsPage() {
     const [message, setMessage] = useState({ type: '', text: '' });
 
     const systemInfo = {
-        backendUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api',
+        backendUrl: process.env.NEXT_PUBLIC_API_URL || 'https://scopesmith-backend.onrender.com/api',
         apiVersion: 'v1.0.0',
         environment: 'Development',
     };
@@ -99,8 +99,8 @@ export default function SettingsPage() {
 
             {message.text && (
                 <div className={`p-3 rounded-lg text-sm ${message.type === 'success'
-                        ? 'bg-green-500/10 border border-green-500/20 text-green-400'
-                        : 'bg-red-500/10 border border-red-500/20 text-red-400'
+                    ? 'bg-green-500/10 border border-green-500/20 text-green-400'
+                    : 'bg-red-500/10 border border-red-500/20 text-red-400'
                     }`}>
                     {message.text}
                 </div>
