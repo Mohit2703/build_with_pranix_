@@ -16,7 +16,7 @@ def call_anthropic_model(api_key: str, prompt: str, model: str = "claude-opus-4-
 
     message = client.messages.create(
         model=model,
-        max_tokens=1000,
+        max_tokens=8192,
         messages=[
             {
                 "role": "user",
