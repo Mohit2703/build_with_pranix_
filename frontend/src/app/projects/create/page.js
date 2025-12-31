@@ -18,7 +18,8 @@ export default function CreateProjectPage() {
   const [form, setForm] = useState({
     name: '',
     project_type_id: '',
-    description: ''
+    description: '',
+    file: null
   });
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -42,7 +43,11 @@ export default function CreateProjectPage() {
   };
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    if (e.target.name === 'file') {
+      setForm({ ...form, file: e.target.files[0] });
+    } else {
+      setForm({ ...form, [e.target.name]: e.target.value });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -50,10 +55,15 @@ export default function CreateProjectPage() {
     setError('');
     setSubmitting(true);
     try {
-      await api.post('/projects/project/', {
-        ...form,
-        project_type_id: parseInt(form.project_type_id)
-      });
+      const formData = new FormData();
+      formData.append('name', form.name);
+      formData.append('project_type_id', parseInt(form.project_type_id));
+      formData.append('description', form.description);
+      if (form.file) {
+        formData.append('file', form.file);
+      }
+
+      await api.uploadFile('/projects/project/', formData);
       router.push('/dashboard');
     } catch (err) {
       console.error('Failed to create project:', err);
@@ -176,6 +186,18 @@ export default function CreateProjectPage() {
                       rows={4}
                       value={form.description}
                       onChange={handleChange}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-2 block text-sm font-medium text-foreground">
+                      Attach File (Optional)
+                    </label>
+                    <Input
+                      type="file"
+                      name="file"
+                      onChange={handleChange}
+                      className="cursor-pointer"
                     />
                   </div>
 

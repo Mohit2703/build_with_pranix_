@@ -10,6 +10,7 @@ from .models import ProjectType, Project, Question, Answer, AI_Question, AI_Answ
 from .serializers import QuestionSerializer, AnswerSerializer, ProjectTypeSerializer, ProjectSerializer, AI_QuestionSerializer, AI_AnswerSerializer, Project_ReportSerializer
 from django.db.models import Q
 from .anthropic.prompt import anthropic_prompt
+from .utils.file_parser import get_file_content_as_context
 
 
 # Create your views here.
@@ -85,7 +86,7 @@ class ProjectView(APIView):
         if not project_type:
             return Response({"detail": "Project type is not present"}, status=status.HTTP_400_BAD_REQUEST)
 
-        project = Project.objects.create(name = name, description = description, project_type = project_type, user = user)
+        project = Project.objects.create(name = name, description = description, project_type = project_type, user = user, file = request.FILES.get('file'))
         serializer = ProjectSerializer(project)
         return Response({
             "detail": "Project Created successfully",
@@ -415,7 +416,8 @@ class GetNextQuestionView(APIView):
             "project_type_description": project.project_type.description
         }
 
-        ai_questions = anthropic_prompt.ask_questions(all_questions, project_info)
+        file_context = get_file_content_as_context(project.file)
+        ai_questions = anthropic_prompt.ask_questions(all_questions, project_info, file_context=file_context)
 
         print("Generated AI Questions: ", ai_questions)
 
@@ -498,7 +500,8 @@ class AnswerQuestionView(APIView):
                     "project_type": project.project_type.name,
                     "project_type_description": project.project_type.description
                 }
-                ai_questions = anthropic_prompt.ask_questions(all_questions, project_info)
+                file_context = get_file_content_as_context(project.file)
+                ai_questions = anthropic_prompt.ask_questions(all_questions, project_info, file_context=file_context)
 
                 if ai_questions:
                     previous_ai_question = None
@@ -593,7 +596,8 @@ class GenerateReportView(APIView):
             "project_type_description": project.project_type.description
         }
 
-        generated_report = anthropic_prompt.generate_requirements(all_questions, project_info)
+        file_context = get_file_content_as_context(project.file)
+        generated_report = anthropic_prompt.generate_requirements(all_questions, project_info, file_context=file_context)
 
         print("Generated Report: ", generated_report)
 

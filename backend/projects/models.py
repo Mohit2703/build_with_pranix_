@@ -30,6 +30,7 @@ class Project(models.Model):
     project_type = models.ForeignKey(ProjectType, on_delete=models.CASCADE)
     status = models.CharField(max_length=50, default="proposed", choices=STATUS_CHOICES)
     enabled = models.BooleanField(default=True)
+    file = models.FileField(upload_to='projects/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)    
 
