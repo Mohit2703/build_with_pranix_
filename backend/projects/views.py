@@ -85,7 +85,7 @@ class ProjectView(APIView):
         if not project_type:
             return Response({"detail": "Project type is not present"}, status=status.HTTP_400_BAD_REQUEST)
 
-        project = Project.objects.create(name = name, description = description, project_type = project_type, user = user)
+        project = Project.objects.create(name = name, description = description, project_type = project_type, user = user, file = request.FILES.get('file'))
         serializer = ProjectSerializer(project)
         return Response({
             "detail": "Project Created successfully",
