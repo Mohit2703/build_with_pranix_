@@ -13,7 +13,7 @@ class UserSafeSerializer(serializers.ModelSerializer):
 class SignupSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=150)
     email = serializers.EmailField()
-    password = serializers.CharField(write_only=True, min_length=4)
+    password = serializers.CharField(write_only=True, min_length=6)
     mobile_number = serializers.CharField(max_length=20, required=False, allow_blank=True)
     country = serializers.CharField(max_length=100, required=False, allow_blank=True)
     company_name = serializers.CharField(max_length=200, required=False, allow_blank=True)
