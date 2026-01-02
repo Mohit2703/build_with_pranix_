@@ -19,12 +19,7 @@ export default function Navbar() {
                 <div className="flex items-center justify-between h-20">
                     <div className="flex-shrink-0">
                         <Link href="/" className="flex items-center gap-2">
-                            <div className="w-10 h-10 rounded-full premium-gradient flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                                <div className="w-5 h-5 rounded-full border-[3px] border-white/30" />
-                            </div>
-                            <span className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
-                                Nexora
-                            </span>
+                            <img src="/pranix_logo.png" alt="Pranix logo" className="w-30 h-30 object-contain" />
                         </Link>
                     </div>
 
@@ -51,7 +46,7 @@ export default function Navbar() {
                             href="/dashboard"
                             className="bg-gradient-to-r from-[var(--brand-blue)] to-[var(--brand-purple)] text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg hover:shadow-indigo-500/25 hover:-translate-y-0.5 active:translate-y-0"
                         >
-                            Get Quote
+                            Generate Requirement
                         </Link>
                     </div>
                 </div>
