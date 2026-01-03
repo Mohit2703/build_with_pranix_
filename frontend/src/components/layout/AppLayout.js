@@ -19,12 +19,7 @@ export function AppLayout({ children }) {
                         <div className="flex">
                             <div className="flex flex-shrink-0 items-center gap-2">
                                 <Link href="/dashboard" className="flex items-center gap-2">
-                                    <div className="w-8 h-8 rounded-full premium-gradient flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                                        <div className="w-4 h-4 rounded-full border-[2px] border-white/30" />
-                                    </div>
-                                    <span className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">
-                                        Nexora
-                                    </span>
+                                    <img src="/pranix_logo.png" alt="Pranix logo" className="w-30 h-30 object-contain" />
                                 </Link>
                             </div>
                             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">

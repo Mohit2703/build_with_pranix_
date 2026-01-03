@@ -106,12 +106,10 @@ export function AdminSidebar({ isCollapsed = false, onToggle }) {
             {/* Logo */}
             <div className="h-16 px-4 flex items-center border-b border-slate-800">
                 <Link href="/admin" className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full premium-gradient flex items-center justify-center shadow-lg shadow-indigo-500/20 flex-shrink-0">
-                        <div className="w-4 h-4 rounded-full border-[2px] border-white/30" />
-                    </div>
+                    <img src="/pranix_logo.png" alt="Pranix logo" className="w-30 h-30 object-contain" />
+
                     {!isCollapsed && (
                         <div className="flex flex-col">
-                            <span className="text-white font-bold text-lg leading-none">Nexora</span>
                             <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Admin</span>
                         </div>
                     )}

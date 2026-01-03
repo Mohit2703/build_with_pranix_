@@ -74,7 +74,7 @@ export default function Footer() {
 
                 <div className="border-t border-slate-100 dark:border-slate-900 pt-12 flex flex-col md:flex-row justify-between items-center gap-6">
                     <p className="text-slate-500 dark:text-slate-400 font-medium">
-                        © {new Date().getFullYear()} Nexora. All rights reserved.
+                        © {new Date().getFullYear()} Pranix. All rights reserved.
                     </p>
                     <div className="flex gap-8 text-slate-500 dark:text-slate-400 font-medium">
                         <Link href="#" className="hover:text-[var(--brand-blue)] transition-colors">Privacy Policy</Link>
