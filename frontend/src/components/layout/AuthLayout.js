@@ -10,9 +10,6 @@ export function AuthLayout({ children, title, description }) {
 
             <div className="w-full max-w-md space-y-8 relative z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-2xl border border-white/20 dark:border-slate-800/50">
                 <div className="text-center">
-                    <div className="mx-auto w-12 h-12 rounded-full premium-gradient flex items-center justify-center shadow-lg shadow-indigo-500/20 mb-6">
-                        <div className="w-6 h-6 rounded-full border-[3px] border-white/30" />
-                    </div>
                     <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
                         {title}
                     </h2>
