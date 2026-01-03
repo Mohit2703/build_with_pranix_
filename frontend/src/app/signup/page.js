@@ -153,7 +153,7 @@ export default function SignupPage() {
   return (
     <AuthLayout
       title={step === 1 ? "Create an account" : "Verify your email"}
-      description={step === 1 ? "Get started with ScopeSmith today" : `We've sent a code to ${formData.email}`}
+      description={step === 1 ? "Get started Building with Pranix today" : `We've sent a code to ${formData.email}`}
     >
       {step === 1 ? (
         <form className="space-y-4" onSubmit={handleInitiateSignup}>
