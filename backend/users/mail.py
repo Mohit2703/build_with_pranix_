@@ -10,8 +10,8 @@ def generate_otp():
 
 def send_otp_email(email, otp):
     """Send OTP to user's email for verification during signup."""
-    subject = 'ScopeSmith - Verify Your Email'
-    message = f'''Welcome to ScopeSmith!
+    subject = 'Pranix - Verify Your Email'
+    message = f'''Welcome to Pranix!
 
 Your verification code is: {otp}
 
@@ -20,7 +20,7 @@ This code expires in 10 minutes.
 If you didn't request this, please ignore this email.
 
 Best regards,
-The ScopeSmith Team'''
+The Pranix Team'''
     
     from_email = settings.EMAIL_HOST_USER
     recipient_list = [email]
