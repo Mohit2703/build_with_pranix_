@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/Button';
 import { usePathname } from 'next/navigation';
+import Logo from '@/components/ui/Logo';
 
 export function AppLayout({ children }) {
     const { user, logout } = useAuth();
@@ -19,7 +20,7 @@ export function AppLayout({ children }) {
                         <div className="flex">
                             <div className="flex flex-shrink-0 items-center gap-2">
                                 <Link href="/dashboard" className="flex items-center gap-2">
-                                    <img src="/pranix_logo.png" alt="Pranix logo" className="w-30 h-30 object-contain" />
+                                    <Logo className="w-30 h-30 object-contain" />
                                 </Link>
                             </div>
                             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">

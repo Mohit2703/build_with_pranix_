@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import Logo from '@/components/ui/Logo';
 
 const navItems = [
     {
@@ -106,7 +107,7 @@ export function AdminSidebar({ isCollapsed = false, onToggle }) {
             {/* Logo */}
             <div className="h-16 px-4 flex items-center border-b border-slate-800">
                 <Link href="/admin" className="flex items-center gap-3">
-                    <img src="/pranix_logo.png" alt="Pranix logo" className="w-30 h-30 object-contain" />
+                    <Logo variant="dark" className="w-30 h-30 object-contain" />
 
                     {!isCollapsed && (
                         <div className="flex flex-col">

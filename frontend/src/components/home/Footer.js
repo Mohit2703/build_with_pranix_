@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Logo from '@/components/ui/Logo';
 
 export default function Footer() {
     return (
@@ -8,7 +9,7 @@ export default function Footer() {
                     {/* Brand */}
                     <div className="col-span-2 md:col-span-4">
                         <Link href="/" className="flex items-center gap-2 mb-8">
-                            <img src="/pranix_logo.png" alt="Pranix logo" className="w-40 h-40 object-contain" />
+                            <Logo className="w-40 h-40 object-contain" />
                         </Link>
                         <p className="text-slate-500 dark:text-slate-400 text-lg leading-relaxed mb-8 max-w-sm">
                             Building powerful digital solutions that transform businesses and drive growth.

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import ThemeToggle from './ThemeToggle';
+import Logo from '@/components/ui/Logo';
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
@@ -19,7 +20,7 @@ export default function Navbar() {
                 <div className="flex items-center justify-between h-20">
                     <div className="flex-shrink-0">
                         <Link href="/" className="flex items-center gap-2">
-                            <img src="/pranix_logo.png" alt="Pranix logo" className="w-30 h-30 object-contain" />
+                            <Logo className="w-30 h-30 object-contain" />
                         </Link>
                     </div>
 
