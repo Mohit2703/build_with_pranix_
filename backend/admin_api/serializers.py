@@ -215,6 +215,7 @@ class SettingsSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'ai_questions_enabled', 'voice_input_enabled',
             'report_regeneration_enabled', 'primary_color', 'accent_color',
+            'question_generation_prompt', 'requirement_generation_prompt',
             'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at']

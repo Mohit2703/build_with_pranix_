@@ -16,3 +16,4 @@ dj_database_url
 whitenoise
 gunicorn
 openai
+PyPDF2

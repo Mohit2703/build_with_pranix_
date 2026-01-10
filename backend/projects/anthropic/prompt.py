@@ -1,5 +1,21 @@
 from .call_model import call_openai_model
 from core.settings import OPENAI_API_ENV
+
+
+def get_custom_prompts():
+    """Fetch custom prompts from admin Settings, with fallback to defaults."""
+    try:
+        from admin_api.models import Settings
+        settings = Settings.get_settings()
+        return {
+            'question': settings.question_generation_prompt,
+            'requirement': settings.requirement_generation_prompt
+        }
+    except Exception:
+        # Fallback if Settings table doesn't exist (during migrations)
+        return {'question': '', 'requirement': ''}
+
+
 class AnthropicPrompt:
     def __init__(self, api_key: str, model: str = "gpt-4"):
         self.api_key = api_key
@@ -20,8 +36,17 @@ class AnthropicPrompt:
                 "question_asked_by": str
             }
         """
-
-        prompt = f"You are an AI assistant for getting the project requirements with project info {str(project_info)} from the client.\n Following are the predifined and ai asked questions along with their answers(if available).\n Please ask relevant questions to get the complete requirements from the client based on the below questions and answers if any are missing.\n"
+        # Get custom prompt from settings
+        custom_prompts = get_custom_prompts()
+        custom_question_prompt = custom_prompts.get('question', '')
+        
+        if custom_question_prompt:
+            # Use custom prompt with project info placeholder
+            prompt = f"{custom_question_prompt}\n\nProject Info: {str(project_info)}\n\n"
+        else:
+            # Fallback to default prompt
+            prompt = f"You are an AI assistant for getting the project requirements with project info {str(project_info)} from the client.\n Following are the predifined and ai asked questions along with their answers(if available).\n Please ask relevant questions to get the complete requirements from the client based on the below questions and answers if any are missing.\n"
+        
         for question in all_questions:
             prompt += f"Question: {question['question_text']}\n"
             if question['answer_text']:
@@ -31,7 +56,8 @@ class AnthropicPrompt:
             
             prompt += f"Asked by: {question['question_asked_by']}\n\n"
 
-        prompt += "Please provide only the list of questions semicolon separated that need to be asked to the client to get the complete project requirements. Do not include any other text."
+        if not custom_question_prompt:
+            prompt += "Please provide only the list of questions semicolon separated that need to be asked to the client to get the complete project requirements. Do not include any other text."
 
         return prompt
     
@@ -50,8 +76,16 @@ class AnthropicPrompt:
                 "question_asked_by": str
             }
         """
-
-        prompt = f"""
+        # Get custom prompt from settings
+        custom_prompts = get_custom_prompts()
+        custom_requirement_prompt = custom_prompts.get('requirement', '')
+        
+        if custom_requirement_prompt:
+            # Use custom prompt with project info
+            prompt = f"{custom_requirement_prompt}\n\nProject Info: {str(project_info)}\n\nFollowing are the questions along with their answers provided by the client:\n\n"
+        else:
+            # Fallback to default prompt
+            prompt = f"""
         You are an AI assistant for generating project with project info {str(project_info)} requirements in HTML format should be visually stunning include:
             • Project overview
             • Detailed functional requirements
