@@ -15,6 +15,8 @@ export default function SettingsPage() {
         report_regeneration_enabled: true,
         primary_color: '#4f46e5',
         accent_color: '#10b981',
+        question_generation_prompt: '',
+        requirement_generation_prompt: '',
     });
     const [message, setMessage] = useState({ type: '', text: '' });
 
@@ -22,6 +24,30 @@ export default function SettingsPage() {
         backendUrl: process.env.NEXT_PUBLIC_API_URL || 'https://scopesmith-backend.onrender.com/api',
         apiVersion: 'v1.0.0',
         environment: 'Development',
+    };
+
+    // Default prompts (should match backend defaults)
+    const defaultPrompts = {
+        question_generation_prompt: `You are an AI assistant for getting the project requirements from the client.
+Following are the predefined and AI asked questions along with their answers (if available).
+Please ask relevant questions to get the complete requirements from the client based on the below questions and answers if any are missing.
+Please provide only the list of questions semicolon separated that need to be asked to the client to get the complete project requirements. Do not include any other text.`,
+        requirement_generation_prompt: `You are an AI assistant for generating project requirements in HTML format that should be visually stunning. Include:
+• Project overview
+• Detailed functional requirements
+• Technical requirements
+• User stories
+• Acceptance criteria
+• Wireframe descriptions (text)
+• Database schema suggestions
+• API endpoint list
+
+Excludes:
+• User flow diagrams
+• Timeline
+• Costing
+
+Based on the client's answers to the questions asked, please generate a comprehensive project requirement to be presented to the client.`
     };
 
     const fetchSettings = async () => {
@@ -34,6 +60,8 @@ export default function SettingsPage() {
                 report_regeneration_enabled: response.report_regeneration_enabled,
                 primary_color: response.primary_color || '#4f46e5',
                 accent_color: response.accent_color || '#10b981',
+                question_generation_prompt: response.question_generation_prompt || '',
+                requirement_generation_prompt: response.requirement_generation_prompt || '',
             });
         } catch (err) {
             console.error('Failed to fetch settings:', err);
@@ -50,6 +78,13 @@ export default function SettingsPage() {
         setSettings(prev => ({
             ...prev,
             [key]: !prev[key],
+        }));
+    };
+
+    const resetPromptToDefault = (promptKey) => {
+        setSettings(prev => ({
+            ...prev,
+            [promptKey]: defaultPrompts[promptKey],
         }));
     };
 
@@ -194,6 +229,52 @@ export default function SettingsPage() {
                                 />
                             </div>
                         </div>
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* AI Prompts */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>AI Prompts</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                            <label className="block text-sm font-medium text-foreground">Question Generation Prompt</label>
+                            <button
+                                onClick={() => resetPromptToDefault('question_generation_prompt')}
+                                className="text-xs text-admin-accent-blue hover:text-admin-accent-blue/80 transition-colors"
+                            >
+                                Reset to Default
+                            </button>
+                        </div>
+                        <p className="text-xs text-muted-foreground">This prompt is used by the AI to generate follow-up questions for gathering project requirements.</p>
+                        <textarea
+                            value={settings.question_generation_prompt}
+                            onChange={(e) => setSettings(prev => ({ ...prev, question_generation_prompt: e.target.value }))}
+                            placeholder="Enter custom prompt for question generation..."
+                            className="w-full h-32 p-3 rounded-lg bg-input border border-border text-foreground text-sm resize-y focus:outline-none focus:ring-2 focus:ring-admin-accent-blue/50"
+                        />
+                    </div>
+
+                    <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                            <label className="block text-sm font-medium text-foreground">Requirement Document Prompt</label>
+                            <button
+                                onClick={() => resetPromptToDefault('requirement_generation_prompt')}
+                                className="text-xs text-admin-accent-blue hover:text-admin-accent-blue/80 transition-colors"
+                            >
+                                Reset to Default
+                            </button>
+                        </div>
+                        <p className="text-xs text-muted-foreground">This prompt is used by the AI to generate comprehensive requirement documents based on project answers.</p>
+                        <textarea
+                            value={settings.requirement_generation_prompt}
+                            onChange={(e) => setSettings(prev => ({ ...prev, requirement_generation_prompt: e.target.value }))}
+                            placeholder="Enter custom prompt for requirement document generation..."
+                            className="w-full h-40 p-3 rounded-lg bg-input border border-border text-foreground text-sm resize-y focus:outline-none focus:ring-2 focus:ring-admin-accent-blue/50"
+                        />
                     </div>
                 </CardContent>
             </Card>
